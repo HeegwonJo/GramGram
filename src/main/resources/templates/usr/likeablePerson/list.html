@@ -16,14 +16,25 @@
     </th:block>
 
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
-        <ul>
+        <div class="overflow-x-auto">
+        <table class="table w-full">
+        <thead class="text-center">
+        <tr>
+            <th>인스타계정</th>
+            <th>매력</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
             <li th:each="likeablePerson: ${likeablePeople}">
-                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
-                <span class="toInstaMember_attractiveTypeDisplayName"
-                      th:text="${likeablePerson.attractiveTypeDisplayName}"></span>
-                <a th:href="@{|delete/${likeablePerson.id}|}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+            <td> <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span></td>
+            <td> <span class="toInstaMember_attractiveTypeDisplayName" th:text="${likeablePerson.attractiveTypeDisplayName}"></span></td>
+            <td> <a class="btn btn-secondary" th:if="${#authentication.getPrincipal().getUsername()==likeablePerson.fromInstaMemberUsername}"
+                       th:href="@{|delete/${likeablePerson.id}|}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a></td>
             </li>
-        </ul>
+        </tbody>
+        </table>
+        </div>
     </th:block>
 </mai>
 </body>

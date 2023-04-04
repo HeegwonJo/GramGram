@@ -9,12 +9,15 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -59,4 +62,16 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/list";
     }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delete (Principal principal, @PathVariable("id") Long id){
+        LikeablePerson likeablePerson = this.likeablePersonService.findById(id);
+
+        if(!likeablePerson.getFromInstaMemberUsername().equals(principal.getName())){
+            rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
+        }
+        this.likeablePersonService.delete(likeablePerson);
+        return rq.redirectWithMsg("/likeablePerson/list", "삭제되었습니다.");
+    }
+
 }

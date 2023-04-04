@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface LikeablePersonRepository extends JpaRepository<LikeablePerson, Integer> {
     List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId);
+
+    LikeablePerson findByToInstaMemberId(Long toInstaMemberId);
+
+    LikeablePerson findById (Long id);
 }
