@@ -26,12 +26,12 @@
         </tr>
         </thead>
         <tbody class="text-center">
-            <li th:each="likeablePerson: ${likeablePeople}">
+            <tr th:each="likeablePerson: ${likeablePeople}">
             <td> <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span></td>
             <td> <span class="toInstaMember_attractiveTypeDisplayName" th:text="${likeablePerson.attractiveTypeDisplayName}"></span></td>
             <td> <a class="btn btn-secondary" th:if="${#authentication.getPrincipal().getUsername()==likeablePerson.fromInstaMemberUsername}"
                        th:href="@{|delete/${likeablePerson.id}|}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a></td>
-            </li>
+            </tr>
         </tbody>
         </table>
         </div>

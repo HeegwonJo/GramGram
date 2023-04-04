@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.instaMember.repository.InstaMemberRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -26,6 +28,7 @@ import java.util.List;
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
+    private final InstaMemberRepository instaMemberRepository;
 
     @GetMapping("/add")
     public String showAdd() {
@@ -66,8 +69,9 @@ public class LikeablePersonController {
     @GetMapping("/delete/{id}")
     public String delete (Principal principal, @PathVariable("id") Long id){
         LikeablePerson likeablePerson = this.likeablePersonService.findById(id);
+        Optional<InstaMember> doDeletePerson = this.instaMemberRepository.findByUsername(principal.getName());
 
-        if(!likeablePerson.getFromInstaMemberUsername().equals(principal.getName())){
+        if(!likeablePerson.getFromInstaMember().equals(doDeletePerson)){
             rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
         }
         this.likeablePersonService.delete(likeablePerson);
