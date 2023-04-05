@@ -24,7 +24,7 @@
     <!-- 아이콘 목록 : https://fontawesome.com/search?o=r&m=free -->
 </head>
 
-<body>
+<body class="max-w-2xl mx-auto">
 
 <!-- 데이지 UI 불러오기 -->
 <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
@@ -34,9 +34,9 @@
 <!-- 네비게이션바 -->
 <nav th:replace="~{usr/layout/navbar :: navbarFragment}"></nav>
 
-<content class="max-w-2xl mx-auto">
+<div class="max-w-2xl mx-auto">
 <main layout:fragment="main"></main>
-</content>
+</div>
 <script th:inline="javascript">
     // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
     const params = /*[[ ${param} ]]*/ null;

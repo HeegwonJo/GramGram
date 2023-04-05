@@ -7,7 +7,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
           </svg>
         </label>
-        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 z-10">
           <li th:if="${@rq.logout}"><a href="/member/login"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
           <li th:if="${@rq.logout}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
           <li th:if="${@rq.login}"><a href="/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
