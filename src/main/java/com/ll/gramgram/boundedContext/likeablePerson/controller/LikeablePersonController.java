@@ -67,9 +67,8 @@ public class LikeablePersonController {
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String delete (Principal principal, @PathVariable("id") Long id){
+    public String delete (@PathVariable("id") Long id){
         LikeablePerson likeablePerson = this.likeablePersonService.findById(id);
-        Optional<InstaMember> doDeletePerson = this.instaMemberRepository.findByUsername(principal.getName());
 
         if(likeablePerson.getFromInstaMember().getUsername().equals(rq.getMember().getInstaMember().getUsername())){
             rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
