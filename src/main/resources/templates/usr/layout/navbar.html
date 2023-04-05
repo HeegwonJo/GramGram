@@ -1,6 +1,5 @@
 <nav th:fragment="navbarFragment"  class="sticky top-0">
-
-  <div class="navbar max-w-2xl mx-auto bg-base-100">
+  <div class="navbar max-w-2xl mx-auto bg-base-100 z-50">
     <div class="navbar-start">
       <div class="dropdown">
         <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -9,23 +8,23 @@
           </svg>
         </label>
         <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-          <li th:if="${@rq.logout}"><a href="#"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
-          <li th:if="${@rq.logout}"><a href="#"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
-          <li th:if="${@rq.login}"><a href="#"><i class="fa-solid fa-user"></i> 내 정보</a></li>
+          <li th:if="${@rq.logout}"><a href="/member/login"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
+          <li th:if="${@rq.logout}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
+          <li th:if="${@rq.login}"><a href="/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
           <li th:if="${@rq.login}">
             <a href="javascript:;" onclick="$(this).next().submit();">
               <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
             </a>
-            <form class="!hidden" th:action="/member/logout" method="POST"></form>
+            <form class="!hidden" th:if="${@rq.login}" th:action="|/member/logout|" method="POST"></form>
           </li>
-          <li th:if="${@rq.login}"><a href="#"><i class="fa-brands fa-instagram"></i> 인스타 ID 입력</a></li>
-          <li th:if="${@rq.login}"><a href="#"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a></li>
-          <li th:if="${@rq.login}"><a href="#"><i class="fa-solid fa-list-ol"></i> 호감목록</a></li>
+          <li th:if="${@rq.login}"><a href="/instaMember/connect"><i class="fa-brands fa-instagram"></i> 인스타 ID 입력</a></li>
+          <li th:if="${@rq.login}"><a href="/likeablePerson/add"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a></li>
+          <li th:if="${@rq.login}"><a href="/likeablePerson/list"><i class="fa-solid fa-list-ol"></i> 호감목록</a></li>
         </ul>
       </div>
     </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost normal-case text-xl">gramgram</a>
+      <a href="/" class="btn btn-ghost normal-case text-xl">gramgram</a>
     </div>
     <div class="navbar-end">
       <button class="btn btn-ghost btn-circle">

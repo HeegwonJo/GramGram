@@ -6,7 +6,7 @@
 
 <body>
 
-<mai layout:fragment="main">
+<main layout:fragment="main">
     <th:block th:unless="${@rq.member.hasConnectedInstaMember}">
         <div>먼저 본인의 인스타그램 아이디를 입력해주세요.</div>
 
@@ -16,9 +16,9 @@
     </th:block>
 
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
-        <div class="overflow-x-auto">
-        <table class="table w-full bg-purple-300">
-        <thead class="text-center bg-purple-300">
+        <div class="overflow-x-auto max-w-2xl mx-auto">
+        <table class="table w-full">
+        <thead class="text-center bg-purple-100">
         <tr>
             <th>인스타계정</th>
             <th>매력</th>
@@ -35,7 +35,7 @@
         </table>
         </div>
     </th:block>
-</mai>
+</main>
 </body>
 
 </html>
