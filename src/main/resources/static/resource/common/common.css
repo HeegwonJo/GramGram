@@ -10,3 +10,8 @@ html > body {
     text-underline-position: under;
     word-break: keep-all;
 }
+
+
+thead {
+    background-color: bisque;
+}

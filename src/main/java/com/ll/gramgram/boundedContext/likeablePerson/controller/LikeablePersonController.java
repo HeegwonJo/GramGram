@@ -71,7 +71,7 @@ public class LikeablePersonController {
         LikeablePerson likeablePerson = this.likeablePersonService.findById(id);
         Optional<InstaMember> doDeletePerson = this.instaMemberRepository.findByUsername(principal.getName());
 
-        if(!likeablePerson.getFromInstaMember().equals(doDeletePerson)){
+        if(likeablePerson.getFromInstaMember().getId()!=rq.getMember().getId()){
             rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
         }
         this.likeablePersonService.delete(likeablePerson);
