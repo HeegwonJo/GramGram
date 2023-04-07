@@ -48,4 +48,16 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+
+    public LikeablePerson findByToInstaMemberId(Long toInstaMemberId){
+        return likeablePersonRepository.findByToInstaMemberId(toInstaMemberId);
+    }
+
+    @Transactional
+  public void delete (LikeablePerson likeablePerson){
+        this.likeablePersonRepository.delete(likeablePerson);
+  }
+    public LikeablePerson findById(Long id) {
+        return this.likeablePersonRepository.findById(id);
+    }
 }
