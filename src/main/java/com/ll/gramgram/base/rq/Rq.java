@@ -69,6 +69,9 @@ public class Rq {
         String key = "historyBackErrorMsg___" + referer;
         req.setAttribute("localStorageKeyAboutHistoryBackErrorMsg", key);
         req.setAttribute("historyBackErrorMsg", msg);
+        //응답코드 400으로 지정
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
         return "common/js";
     }
 
