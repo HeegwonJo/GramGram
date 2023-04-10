@@ -71,7 +71,7 @@ public class LikeablePersonController {
         if(likeablePerson==null) return rq.historyBack("이미 취소된 호감입니다.");
         RsData ableToDeleteRs = likeablePersonService.ableToDelete(rq.getMember(),likeablePerson);
 
-        if(ableToDeleteRs.isFail())return   rq.historyBack(ableToDeleteRs);
+        if(ableToDeleteRs.isFail()) return rq.historyBack(ableToDeleteRs);
 
         RsData deleteRs= likeablePersonService.delete(likeablePerson);
         this.likeablePersonService.delete(likeablePerson);
