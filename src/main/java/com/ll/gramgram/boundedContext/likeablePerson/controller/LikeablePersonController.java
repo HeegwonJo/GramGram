@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -42,6 +39,7 @@ public class LikeablePersonController {
         private final int attractiveTypeCode;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
@@ -53,6 +51,7 @@ public class LikeablePersonController {
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String showList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
@@ -66,15 +65,17 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
+    @DeleteMapping ("/{id}")
     public String delete (@PathVariable("id") Long id){
-        LikeablePerson likeablePerson = this.likeablePersonService.findById(id);
+        LikeablePerson likeablePerson = this.likeablePersonService.findById(id).orElse(null);
+        if(likeablePerson==null) return rq.historyBack("이미 취소된 호감입니다.");
+        RsData ableToDeleteRs = likeablePersonService.ableToDelete(rq.getMember(),likeablePerson);
 
-        if(likeablePerson.getFromInstaMember().getUsername().equals(rq.getMember().getInstaMember().getUsername())){
-            rq.redirectWithMsg("/likeablePerson/list", "삭제 권한이 없습니다.");
-        }
+        if(ableToDeleteRs.isFail()) return rq.historyBack(ableToDeleteRs);
+
+        RsData deleteRs= likeablePersonService.delete(likeablePerson);
         this.likeablePersonService.delete(likeablePerson);
-        return rq.redirectWithMsg("/likeablePerson/list", "삭제되었습니다.");
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
 
 }
