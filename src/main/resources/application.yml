@@ -15,23 +15,18 @@ spring:
       client:
         registration:
           kakao:
-            clientId: 101cfa464b9c0c8808bb82216c4f2812
             scope:
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             client-authentication-method: POST
           google:
-            clientId: 480874533587-8gf6s1u5ajfvdsqknobjruh1qrjefs30.apps.googleusercontent.com
-            clientSecret: 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
             scope:
                 - email
                 - profile
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8080/login/oauth2/code/google
           naver:
-            client-id: gyljg3SG0Kfheg_yRWzz
-            client-secret: gXmWrleA_D
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
