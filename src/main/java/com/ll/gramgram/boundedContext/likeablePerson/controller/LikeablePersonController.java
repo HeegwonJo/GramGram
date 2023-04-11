@@ -42,8 +42,26 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
+        //존재여부 확인
+        RsData isPresentRsData = likeablePersonService.isPresent(rq.getMember(),addForm.getUsername(),addForm.getAttractiveTypeCode());
+        //리스트 사이즈 확인
+        RsData ifMaxSizeRsData = likeablePersonService.ifMaxSize(rq.getMember());
+        //수정여부 확인
+        RsData modifyRsData = likeablePersonService.modifyAttractiveType(rq.getMember(),addForm.getUsername(),addForm.getAttractiveTypeCode());
+        //수정이 성공하면 리스트 출력
+        if(modifyRsData.isSuccess()){
+            return rq.redirectWithMsg("/likeablePerson/list",modifyRsData);
+        }
+        //이미 존재하는 지 검증.
+        if(isPresentRsData.isFail()){
+            return rq.historyBack(isPresentRsData);
+        }
+        //리스트 사이즈가 10이면 더이상 추가 안됨
+        if(ifMaxSizeRsData.isFail()){
+            return rq.historyBack(ifMaxSizeRsData);
+        }
+        //모든 검증이 끝나면 등록 시도
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
-
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
         }
