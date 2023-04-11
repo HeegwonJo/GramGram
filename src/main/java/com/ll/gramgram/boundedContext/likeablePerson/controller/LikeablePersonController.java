@@ -69,11 +69,14 @@ public class LikeablePersonController {
     public String delete (@PathVariable("id") Long id){
         LikeablePerson likeablePerson = this.likeablePersonService.findById(id).orElse(null);
         if(likeablePerson==null) return rq.historyBack("이미 취소된 호감입니다.");
+
         RsData ableToDeleteRs = likeablePersonService.ableToDelete(rq.getMember(),likeablePerson);
 
         if(ableToDeleteRs.isFail()) return rq.historyBack(ableToDeleteRs);
 
         RsData deleteRs= likeablePersonService.delete(likeablePerson);
+        if (deleteRs.isFail()) return rq.historyBack(deleteRs);
+
         this.likeablePersonService.delete(likeablePerson);
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
