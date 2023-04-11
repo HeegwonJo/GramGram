@@ -40,8 +40,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
         }
-        String username = providerTypeCode + "__%s".formatted(oauthId);
 
+        String username = providerTypeCode + "__%s".formatted(oauthId);
 
         Member member = memberService.whenSocialLogin(providerTypeCode, username).getData();
 
