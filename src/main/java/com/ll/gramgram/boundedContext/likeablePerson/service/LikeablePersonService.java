@@ -69,22 +69,28 @@ public class LikeablePersonService {
         return RsData.of("S-2", "%s는 추가가능한 상대".formatted(username));
     }
 
+
+    //수정 메서드
     @Transactional
     public RsData<LikeablePerson> modifyAttractiveType(Member member, String username, int attractiveTypeCode) {
         Optional<LikeablePerson> toLikeAblePerson = likeablePersonRepository.findByToInstaMemberUsername(username);
-        //존재하고 가지고 있고
+        //존재하면 객체 가져와서 매력 내용 가져옴. 기존이랑 매개변수 넘어온거랑 다르면 바꿔주고 다시 저장.
         if (toLikeAblePerson.isPresent()) {
+            //기존 객체
             LikeablePerson likeablePerson = toLikeAblePerson.get();
+            //기존 매력포인트
             int existingAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
+
             if (member.getInstaMember().getFromLikeablePeople().contains(likeablePerson) && attractiveTypeCode != existingAttractiveTypeCode) {
                 likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
                 likeablePersonRepository.save(likeablePerson);
-                return RsData.of("S-1", "%s 님의 호감 정보 수정 완료".formatted(username));
+                return RsData.of("S-1", "%s 님의 호감 정보 수정 완료".formatted(username),likeablePerson);
             }
         }
         return RsData.of("F-1", "수정 할 수 없습니다.");
     }
 
+    //더 추가 가능한지 검증 메서드 사이즈 10넘으면 더이상 추가 안 됨.
     public RsData ifMaxSize(Member member) {
         if (member.getInstaMember().getFromLikeablePeople().size() >= 10) {
             return RsData.of("F-1", "더 이상 호감상대를 추가할 수 없습니다.");
@@ -104,6 +110,7 @@ public class LikeablePersonService {
         return likeablePersonRepository.findById(id);
     }
 
+    //삭제
     @Transactional
     public RsData delete(LikeablePerson likeablePerson) {
         String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
@@ -112,6 +119,7 @@ public class LikeablePersonService {
         return RsData.of("S-1", "%s 님에 대한 호감을 취소했습니다.".formatted(toInstaMemberUsername));
     }
 
+    //삭제 권한 확인
     public RsData ableToDelete(Member actor, LikeablePerson likeablePerson) {
         if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
 

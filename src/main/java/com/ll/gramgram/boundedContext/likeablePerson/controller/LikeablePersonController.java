@@ -39,6 +39,7 @@ public class LikeablePersonController {
         private final int attractiveTypeCode;
     }
 
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
