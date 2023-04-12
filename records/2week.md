@@ -57,6 +57,21 @@ public RsData isPresent(Member member, String username, int attractiveTypeCode) 
     }
 ```
 
+- AppConfig 생성하고 거기서 값 받아오게 변경
+```java
+public RsData ifMaxSize(Member member) {
+        Long maxSize = AppConfig.getLikeablePersonFromMax();
+
+        if (member.getInstaMember().getFromLikeablePeople().size() >= maxSize) {
+            return RsData.of("F-1", "더 이상 호감상대를 추가할 수 없습니다.");
+        }
+        return RsData.of("S-1", "아직 추가가능");
+    }
+
+```
+
+- 이제 application.yml에서 값만 바꿔주면 쉽게 최대 사이즈 변경할 수 있음.
+
 - ### **결과**
 <img width="999" alt="image" src="https://user-images.githubusercontent.com/101499795/231331046-09393631-bc5e-4ca6-82ca-268d33cb7273.png">
 
@@ -185,5 +200,6 @@ likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
 
 - ### **참고: [Refactoring]**
 
-   현재 컨트롤러에서 각각의 RsData를 따로 받아서 순차적으로 검증하고 있는데 이 모든 검증과정을 하나의 결과로 받을 수 있도록
+   - 현재 컨트롤러에서 각각의 RsData를 따로 받아서 순차적으로 검증하고 있는데 이 모든 검증과정을 하나의 결과로 받을 수 있도록
 논리 게이트로 회로 설계하듯이 설계해보면 재미있고 컨트롤러 코드를 간결하게 줄일 수 있을 것 같음.
+  - 네이버 로그인 하면 고유 id가 너무 길어서 불편함

@@ -1,6 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,7 @@ public class LikeablePersonControllerTests {
     private MockMvc mvc;
     @Autowired
     private LikeablePersonService likeablePersonService;
+
     @Test
     @DisplayName("등록 폼(인스타 인증을 안해서 폼 대신 메세지)")
     @WithUserDetails("user1")
@@ -153,6 +155,7 @@ public class LikeablePersonControllerTests {
                         """.stripIndent().trim())));
         ;
     }
+
     @Test
     @DisplayName("호감삭제")
     @WithUserDetails("user3")
@@ -218,6 +221,7 @@ public class LikeablePersonControllerTests {
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
 
     }
+
     @Test
     @DisplayName("등록 폼 처리(user2가 user3에게 호감표시(외모))이미 했는데 다시 함")
     @WithUserDetails("user2")
@@ -272,5 +276,12 @@ public class LikeablePersonControllerTests {
         ;
     }
 
+    @Test
+    @DisplayName("설정파일에 있는 최대가능호감표시 수 가져오기")
+    void t011() throws Exception {
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
+
+        assertThat(likeablePersonFromMax).isEqualTo(10);
+    }
 
 }

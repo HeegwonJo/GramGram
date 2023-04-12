@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
@@ -85,7 +86,7 @@ public class LikeablePersonService {
             if (member.getInstaMember().getFromLikeablePeople().contains(likeablePerson) && attractiveTypeCode != existingAttractiveTypeCode) {
                 likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
                 likeablePersonRepository.save(likeablePerson);
-                return RsData.of("S-1", "%s 님의 호감 정보 수정 완료".formatted(username),likeablePerson);
+                return RsData.of("S-1", "%s 님의 호감정보 수정 완료".formatted(username),likeablePerson);
             }
         }
         return RsData.of("F-1", "수정 할 수 없습니다.");
@@ -93,7 +94,9 @@ public class LikeablePersonService {
 
     //더 추가 가능한지 검증 메서드 사이즈 10넘으면 더이상 추가 안 됨.
     public RsData ifMaxSize(Member member) {
-        if (member.getInstaMember().getFromLikeablePeople().size() >= 10) {
+        Long maxSize = AppConfig.getLikeablePersonFromMax();
+
+        if (member.getInstaMember().getFromLikeablePeople().size() >= maxSize) {
             return RsData.of("F-1", "더 이상 호감상대를 추가할 수 없습니다.");
         }
         return RsData.of("S-1", "아직 추가가능");
