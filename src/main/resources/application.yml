@@ -1,4 +1,12 @@
 spring:
+  thymeleaf:
+    cache: false # 타임리프 캐시 끄기
+    prefix: file:src/main/resources/templates/ # 타임리프 캐시 끄기(이 설정을 해야 꺼짐)
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
   mvc:
    hiddenmethod:
      filter:

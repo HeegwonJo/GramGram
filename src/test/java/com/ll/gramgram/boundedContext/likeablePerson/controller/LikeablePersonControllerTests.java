@@ -218,4 +218,59 @@ public class LikeablePersonControllerTests {
         assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
 
     }
+    @Test
+    @DisplayName("등록 폼 처리(user2가 user3에게 호감표시(외모))이미 했는데 다시 함")
+    @WithUserDetails("user2")
+    void t009() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user3")
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+        ResultActions resultActions2 = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user3")
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+        // THEN
+        resultActions2
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+        ;
+    }
+
+    @Test
+    @DisplayName("등록 폼 처리(user2가 user3에게 호감표시(외모))이미 했는데 다른 호감표시(성격)")
+    @WithUserDetails("user2")
+    void t010() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user3")
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+        ResultActions resultActions2 = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user3")
+                        .param("attractiveTypeCode", "2")
+                )
+                .andDo(print());
+        // THEN
+        resultActions2
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection());
+        ;
+    }
+
+
 }

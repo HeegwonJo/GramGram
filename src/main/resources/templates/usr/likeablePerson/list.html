@@ -18,16 +18,16 @@
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
         <a href="/likeablePerson/add"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a>
         <div class="overflow-x-auto max-w-2xl mx-auto z-0 items-center">
-            <table class="table w-full">
-        <thead class="text-center">
+            <table class="table w-full border-collapse border-4 border-indigo-500/50">
+        <thead class="text-center border-separate border-4 border-indigo-500/50">
         <tr>
             <th>인스타계정</th>
             <th>매력</th>
             <th>삭제</th>
         </tr>
         </thead>
-        <tbody class="text-center ">
-            <tr th:each="likeablePerson: ${likeablePeople}">
+        <tbody class="text-center border-separate border-4 border-indigo-500/50 ">
+            <tr class="border-collapse border-4 border-indigo-500/50"  th:each="likeablePerson: ${likeablePeople}">
             <td> <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span></td>
             <td> <span class="toInstaMember_attractiveTypeDisplayName" th:text="${likeablePerson.attractiveTypeDisplayName}"></span></td>
             <td>  <a class="btn btn-secondary" href="javascript:;" onclick="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();">삭제</a>

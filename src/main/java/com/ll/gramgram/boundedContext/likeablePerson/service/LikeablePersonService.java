@@ -62,6 +62,7 @@ public class LikeablePersonService {
 
         //username으로 검색한 인스타 계정이 존재하고 내가 팔로우했으며, 매력이 같을 경우에 실패.
         if (toLikeAblePerson.isPresent() && member.getInstaMember().getFromLikeablePeople().contains(toLikeAblePerson.get())) {
+            //조건이 길어지니 보기 힘들어서 조건문 속 조건문으로 구현했음
             if (attractiveTypeCode == toLikeAblePerson.get().getAttractiveTypeCode()) {
                 return RsData.of("F-2", "(%s)은 이미 존재하는 호감상대입니다.".formatted(username));
             }
