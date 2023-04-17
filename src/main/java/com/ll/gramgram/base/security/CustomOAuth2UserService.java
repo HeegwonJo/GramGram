@@ -34,14 +34,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
+        //네이버면 여기로 빠지게 함
         if (providerTypeCode.equals("NAVER")) {
             String username =providerTypeCode + "__%s".formatted(attributes.get("id"));
             Member member = memberService.whenSocialLogin(providerTypeCode, username).getData();
-
             return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
         }
-        String username = providerTypeCode + "__%s".formatted(oauthId);
 
+        String username = providerTypeCode + "__%s".formatted(oauthId);
 
         Member member = memberService.whenSocialLogin(providerTypeCode, username).getData();
 

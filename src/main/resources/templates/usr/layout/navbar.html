@@ -27,6 +27,9 @@
       <a href="/" class="btn btn-ghost normal-case text-xl">gramgram</a>
     </div>
     <div class="navbar-end">
+      <span th:if="${@rq.login}" th:text="|${@rq.member.username}님 환영합니다.|"></span>
+      <span th:if="${@rq.login and @rq.member.hasConnectedInstaMember()}" th:text=
+              "|(${#lists.size(@rq.member.instaMember.toLikeablePeople)}/${#lists.size(@rq.member.instaMember.fromLikeablePeople)})|"></span>
       <button class="btn btn-ghost btn-circle">
         <div class="indicator">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

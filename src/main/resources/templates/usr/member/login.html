@@ -40,7 +40,7 @@
                 form.password.focus();
                 return;
             }
-
+            console.log(username);
             form.submit(); // 폼 발송
         }
     </script>
@@ -52,25 +52,26 @@
                 로그인
             </h1>
 
-            <form class="flex flex-col gap-6">
+            <form class="p-10 flex flex-col gap-6" th:action method="POST" onsubmit="LoginForm__submit(this); return false;">
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">아이디</span>
                     </label>
-                    <input type="text" placeholder="아이디" class="input input-bordered" autofocus />
+                    <input type="text" name="username" placeholder="아이디" class="input input-bordered" autofocus />
                 </div>
 
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">비빌번호</span>
                     </label>
-                    <input type="password" placeholder="비빌번호" class="input input-bordered" />
+                    <input type="password" name="password" placeholder="비빌번호" class="input input-bordered" />
                 </div>
 
                 <button class="btn btn-block btn-primary gap-1">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
                     <span>로그인</span>
                 </button>
+            </form>
 
                 <a href="/oauth2/authorization/kakao" class="btn btn-block btn-outline gap-1">
                     <i class="fa-solid fa-comment text-[color:#ffe812]"></i>
@@ -92,7 +93,7 @@
                     <a href="#" class="btn btn-link">아이디찾기</a>
                     <a href="#" class="btn btn-link">비밀번호찾기</a>
                 </div>
-            </form>
+
         </div>
     </div>
 </main>
