@@ -84,7 +84,7 @@ public class LikeablePersonService {
             int existingAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
 
             if (member.getInstaMember().getFromLikeablePeople().contains(likeablePerson) && attractiveTypeCode != existingAttractiveTypeCode) {
-                likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+                likeablePerson.modifyAttractiveTypeCode(attractiveTypeCode);
                 likeablePersonRepository.save(likeablePerson);
                 return RsData.of("S-1", "%s 님의 호감정보 수정 완료".formatted(username),likeablePerson);
             }
@@ -105,6 +105,7 @@ public class LikeablePersonService {
     private Optional<LikeablePerson> findByToInstaMember(String username) {
         return likeablePersonRepository.findByToInstaMemberUsername(username);
     }
+
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);

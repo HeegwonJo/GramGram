@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.entity;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +19,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString
 @Entity
 @Getter
+@DynamicUpdate
 public class LikeablePerson {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -37,7 +39,6 @@ public class LikeablePerson {
     private InstaMember toInstaMember; // 호감을 받은 사람(인스타 멤버)
     private String toInstaMemberUsername; // 혹시 몰라서 기록
 
-    @Setter
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
     public String getAttractiveTypeDisplayName() {
@@ -46,5 +47,9 @@ public class LikeablePerson {
             case 2 -> "성격";
             default -> "능력";
         };
+    }
+
+    public void modifyAttractiveTypeCode(int attractiveTypeCode){
+        this.attractiveTypeCode=attractiveTypeCode;
     }
 }

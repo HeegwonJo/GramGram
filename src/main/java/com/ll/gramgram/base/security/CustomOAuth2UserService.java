@@ -29,17 +29,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String oauthId = oAuth2User.getName();
-        Map<String, Object> attributes = (Map<String, Object>) oAuth2User.getAttributes().get("response");
+
+        String oauthId = getOauthId(userRequest,oAuth2User);
 
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
-
-        //네이버면 여기로 빠지게 함
-        if (providerTypeCode.equals("NAVER")) {
-            String username =providerTypeCode + "__%s".formatted(attributes.get("id"));
-            Member member = memberService.whenSocialLogin(providerTypeCode, username).getData();
-            return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
-        }
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
@@ -47,7 +40,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
+    private String getOauthId(OAuth2UserRequest userRequest, OAuth2User oAuth2User){
+
+        String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+        if (providerTypeCode.equals("NAVER")) {
+            return ((Map<String, String> )oAuth2User.getAttribute("response")).get("id");
+        }
+
+        return oAuth2User.getName();
+    }
 }
+
 
 class CustomOAuth2User extends User implements OAuth2User {
 
