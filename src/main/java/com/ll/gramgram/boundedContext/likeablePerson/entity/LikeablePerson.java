@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
@@ -64,5 +65,9 @@ public class LikeablePerson extends BaseEntity {
     public long getDurationAfterModified(){
         this.durationAfterModified=Duration.between(this.getModifyDate(), LocalDateTime.now());
         return durationAfterModified.toSeconds();
+    }
+
+    public boolean isModifyUnlocked(){
+        return getDurationAfterModified() >= AppConfig.getLikeablePersonDurationAfterModified();
     }
 }
