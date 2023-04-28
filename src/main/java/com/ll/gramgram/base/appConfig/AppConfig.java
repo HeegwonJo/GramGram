@@ -9,8 +9,15 @@ public class AppConfig {
     @Getter
     private static long likeablePersonFromMax;
 
+    @Getter
+    private static long likeablePersonDurationAfterModified;
+
     @Value("${custom.likeablePerson.from.max}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax) {
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
+    }
+
+    public void setLikeablePersonDurationAfterModified(long likeablePersonDurationAfterModified){
+        AppConfig.likeablePersonDurationAfterModified = likeablePersonDurationAfterModified;
     }
 }

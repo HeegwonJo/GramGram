@@ -36,22 +36,35 @@
                             </a>
 
                             <div class="mt-4 mb-2 flex flex-col items-center gap-2">
+                                <span class="badge badge-primary flex"
+                                      th:text="${#temporals.format(likeablePerson.modifyDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                <div class="badge badge-primary">
+                                    <span th:if="${likeablePerson.getDurationAfterModified() < 60}"
+                                          th:text="${likeablePerson.getDurationAfterModified()} + '초 전'"></span>
+                                    <span th:if="${likeablePerson.getDurationAfterModified() >= 60 and likeablePerson.getDurationAfterModified() < 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 60} + '분 전'"></span>
+                                    <span th:if="${likeablePerson.getDurationAfterModified() >= 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 3600} + '시간 전'"></span>
+
+                                </div>
                                 <div class="badge badge-primary">호감사유</div>
                                 <div th:data-test="|toInstaMember_attractiveTypeDisplayName=${likeablePerson.attractiveTypeDisplayName}|"
                                      th:utext="${likeablePerson.attractiveTypeDisplayNameWithIcon}"></div>
                             </div>
 
                             <div class="card-actions justify-center">
-                                <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline">
+                                <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline"
+                                   th:classappend="${likeablePerson.getDurationAfterModified() <= 10800} ? 'opacity-50 cursor-not-allowed' : ''">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     &nbsp;
                                     호감사유 변경
                                 </a>
                                 <a class="btn btn-sm btn-outline" href="javascript:;"
-                                   onclick="if ( confirm('정말로 취소하시겠습니까?') ) $(this).next().submit();">
-                                    <i class="fa-solid fa-user-slash"></i>
-                                    &nbsp;
-                                    호감취소
+                                   onclick="if ( confirm('정말로 취소하시겠습니까?') ) $(this).next().submit();"
+                                   th:classappend="${likeablePerson.getDurationAfterModified() <= 10800} ? 'opacity-50 cursor-not-allowed' : ''">
+                                <i class="fa-solid fa-user-slash"></i>
+                                &nbsp;
+                                호감취소
                                 </a>
                                 <form hidden th:action="@{|/usr/likeablePerson/${likeablePerson.id}|}" method="POST">
                                     <input type="hidden" name="_method" value="delete">
