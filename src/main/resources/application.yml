@@ -54,4 +54,4 @@ custom:
   likeablePerson:
     from:
       max: 10
-    DurationAfterModified: ''#{60 * 60 * 3}'
+    DurationAfterModified: '#{60 * 60 * 3}'

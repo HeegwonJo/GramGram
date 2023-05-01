@@ -17,6 +17,7 @@ public class AppConfig {
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
     }
 
+    @Value("${custom.likeablePerson.DurationAfterModified}")
     public void setLikeablePersonDurationAfterModified(long likeablePersonDurationAfterModified){
         AppConfig.likeablePersonDurationAfterModified = likeablePersonDurationAfterModified;
     }
