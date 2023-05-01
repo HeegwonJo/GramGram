@@ -4,6 +4,7 @@ import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.standard.util.Ut;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @ToString(callSuper = true)
 public class LikeablePerson extends BaseEntity {
+    private LocalDateTime modifyUnlockDate;
+
     @ManyToOne
     @ToString.Exclude
     private InstaMember fromInstaMember; // 호감을 표시한 사람(인스타 멤버)
@@ -32,9 +34,14 @@ public class LikeablePerson extends BaseEntity {
 
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
-    private Duration durationAfterModified; // 수정, 삭제 부터 흐른 시간
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
+    }
 
-
+    // 초 단위에서 올림 해주세요.
+    public String getModifyUnlockDateRemainStrHuman() {
+        return "2시간 16분";
+    }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {
         if (this.attractiveTypeCode == attractiveTypeCode) {
@@ -42,6 +49,7 @@ public class LikeablePerson extends BaseEntity {
         }
 
         this.attractiveTypeCode = attractiveTypeCode;
+        this.modifyUnlockDate = AppConfig.genLikeablePersonModifyUnlockDate();
 
         return RsData.of("S-1", "성공");
     }
@@ -62,12 +70,7 @@ public class LikeablePerson extends BaseEntity {
         } + "&nbsp;" + getAttractiveTypeDisplayName();
     }
 
-    public long getDurationAfterModified(){
-        this.durationAfterModified=Duration.between(this.getModifyDate(), LocalDateTime.now());
-        return durationAfterModified.toSeconds();
-    }
-
-    public boolean isModifyUnlocked(){
-        return getDurationAfterModified() >= AppConfig.getLikeablePersonDurationAfterModified();
+    public String getJdenticon() {
+        return Ut.hash.sha256(fromInstaMember.getId() + "_likes_" + toInstaMember.getId());
     }
 }
