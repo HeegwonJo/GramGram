@@ -6,41 +6,116 @@
 
 <body>
 
-<main layout:fragment="main">
-    <th:block th:unless="${@rq.member.hasConnectedInstaMember}">
-        <div>먼저 본인의 인스타그램 아이디를 입력해주세요.</div>
 
-        <div>
-            <a href="/instaMember/connect" class="btn btn-link">본인의 인스타그램 아이디 입력하기</a>
-        </div>
-    </th:block>
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <div th:unless="${@rq.member.hasConnectedInstaMember}" th:include="usr/part/needToConnect::base"></div>
 
-    <th:block th:if="${@rq.member.hasConnectedInstaMember}">
-        <a href="/likeablePerson/add"><i class="fa-solid fa-heart-circle-plus"></i> 호감표시</a>
-        <div class="overflow-x-auto max-w-2xl mx-auto z-0 items-center">
-            <table class="table w-full border-collapse border-4 border-indigo-500/50">
-        <thead class="text-center border-separate border-4 border-indigo-500/50">
-        <tr>
-            <th>인스타계정</th>
-            <th>매력</th>
-            <th>삭제</th>
-        </tr>
-        </thead>
-        <tbody class="text-center border-separate border-4 border-indigo-500/50 ">
-            <tr class="border-collapse border-4 border-indigo-500/50"  th:each="likeablePerson: ${likeablePeople}">
-            <td> <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span></td>
-            <td> <span class="toInstaMember_attractiveTypeDisplayName" th:text="${likeablePerson.attractiveTypeDisplayName}"></span></td>
-            <td>  <a class="btn btn-secondary" href="javascript:;" onclick="if ( confirm('정말로 삭제하시겠습니까?') ) $(this).next().submit();">삭제</a>
-                <form hidden th:action="@{|/likeablePerson/${likeablePerson.id}|}" method="POST">
-                    <input type="hidden" name="_method" value="delete">
-                </form>
-            </td>
-            </tr>
-        </tbody>
-        </table>
+
+        <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+            <div th:unless="${!#lists.isEmpty(likeablePeople)}" class="text-center">
+                <div><i class="fa-regular fa-face-laugh"></i> 목록이 비어있습니다. 당신의 호감을 표시해주세요.</div>
+            </div>
+
+            <h1 class="mb-4" th:if="${!#lists.isEmpty(likeablePeople)}">
+                <i class="fa-solid fa-list-ol"></i>
+                호감목록
+            </h1>
+
+            <ul th:if="${!#lists.isEmpty(likeablePeople)}" class="flex flex-col gap-4">
+                <li th:each="likeablePerson: ${likeablePeople}">
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span><i class="fa-brands fa-instagram"></i></span>
+                                <span th:data-test="|toInstaMember_username=${likeablePerson.toInstaMember.username}|"
+                                      th:text="${likeablePerson.toInstaMember.username}"></span>
+                            </h2>
+                            <a th:href="|https://instagram.com/${likeablePerson.toInstaMember.username}|"
+                               target="_blank" class="block text-sm break-all text-blue-400 underline">
+                                <span>https://instagram.com/</span><span class="text-red-400"
+                                                                         th:text="${likeablePerson.toInstaMember.username}"></span>
+                            </a>
+
+                            <div class="mt-4 mb-2 flex flex-col items-center gap-2">
+                                <div class="flex flex-row justify-center">
+                                <span class="badge badge-primary"
+                                      th:text="${#temporals.format(likeablePerson.modifyDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                    <span class="badge badge-primary mx-3">
+                                    <span th:if="${likeablePerson.getDurationAfterModified() < 60}"
+                                          th:text="${likeablePerson.getDurationAfterModified()} + '초 전'"></span>
+                                    <span th:if="${likeablePerson.getDurationAfterModified() >= 60 and likeablePerson.getDurationAfterModified() < 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 60} + '분 전'"></span>
+                                    <span th:if="${likeablePerson.getDurationAfterModified() >= 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 3600} + '시간 전'"></span>
+                                </span>
+                                </div>
+                                <div class="badge badge-primary">호감사유</div>
+                                <div th:data-test="|toInstaMember_attractiveTypeDisplayName=${likeablePerson.attractiveTypeDisplayName}|"
+                                     th:utext="${likeablePerson.attractiveTypeDisplayNameWithIcon}"></div>
+                            </div>
+
+                            //변경 버튼들 수정 가능 시각 아니면 투명도 줌.
+                            <div class="card-actions justify-center">
+                                <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline"
+                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-50 cursor-not-allowed' : ''">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    &nbsp;
+                                    호감사유 변경
+                                </a>
+                                <a class="btn btn-sm btn-outline" href="javascript:;"
+                                   onclick="if ( confirm('정말로 취소하시겠습니까?') ) $(this).next().submit();"
+                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-50 cursor-not-allowed' : ''">
+                                    <i class="fa-solid fa-user-slash"></i>
+                                    &nbsp;
+                                    호감취소
+                                </a>
+                                <form hidden th:action="@{|/usr/likeablePerson/${likeablePerson.id}|}" method="POST">
+                                    <input type="hidden" name="_method" value="delete">
+                                </form>
+                            </div>
+                            //수정가능 시각이 되면 사라지는 부분.
+                            <div class="flex justify-center text-sm">
+                                <span class="badge badge-secondary flex"
+                                      id="canModifyTime"
+                                      th:text="${#temporals.format(likeablePerson.modifyDate.plusHours(3), 'yyyy-MM-dd HH:mm')}">
+                                </span>
+                                <span id="modifyMsg">부터 수정, 삭제 가능</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </th:block>
+
+        <div class="text-center mt-4">
+            <a th:if="${@rq.member.hasConnectedInstaMember}" href="like" class="btn btn-link">호감표시</a>
+            <a th:if="${@rq.member.hasConnectedInstaMember}" href="/usr/member/me" class="btn btn-link">내 정보</a>
         </div>
-    </th:block>
+    </div>
+
+    //수정 삭제 가능 시간 되면 시간 안내 사라지게 함.
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var canModifyTime = document.getElementById('canModifyTime');
+            var modifyMsg = document.getElementById('modifyMsg');
+            var targetTime = new Date(canModifyTime.textContent).getTime();
+            var currentTime = new Date().getTime();
+            var duration = 3 * 60 * 60 * 1000; // 3시간을 밀리초로 변환
+
+            if (currentTime > targetTime + duration) {
+                canModifyTime.style.display = 'none';
+                modifyMsg.style.display = 'none';
+            }
+
+        });
+    </script>
+
+
+
 </main>
+
+
 </body>
 
 </html>

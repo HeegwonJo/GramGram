@@ -7,6 +7,7 @@ import com.ll.gramgram.boundedContext.instaMember.repository.InstaMemberReposito
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,54 +21,43 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/likeablePerson")
+@RequestMapping("/usr/likeablePerson")
 @RequiredArgsConstructor
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
     private final InstaMemberRepository instaMemberRepository;
 
-    @GetMapping("/add")
-    public String showAdd() {
-        return "usr/likeablePerson/add";
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/like")
+    public String showLike() {
+        return "usr/likeablePerson/like";
     }
 
     @AllArgsConstructor
     @Getter
-    public static class AddForm {
+    public static class LikeForm {
+        @NotBlank
+        @Size(min = 3, max = 30)
         private final String username;
+        @NotNull
+        @Min(1)
+        @Max(3)
         private final int attractiveTypeCode;
     }
 
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/add")
-    public String add(@Valid AddForm addForm) {
-        //존재여부 확인
-        RsData isPresentRsData = likeablePersonService.isPresent(rq.getMember(),addForm.getUsername(),addForm.getAttractiveTypeCode());
-        //리스트 사이즈 확인
-        RsData ifMaxSizeRsData = likeablePersonService.ifMaxSize(rq.getMember());
-        //수정여부 확인
-        RsData modifyRsData = likeablePersonService.modifyAttractiveType(rq.getMember(),addForm.getUsername(),addForm.getAttractiveTypeCode());
-        //수정이 성공하면 리스트 출력
-        if(modifyRsData.isSuccess()){
-            return rq.redirectWithMsg("/likeablePerson/list",modifyRsData);
-        }
-        //이미 존재하는 지 검증.
-        if(isPresentRsData.isFail()){
-            return rq.historyBack(isPresentRsData);
-        }
-        //리스트 사이즈가 10이면 더이상 추가 안됨
-        if(ifMaxSizeRsData.isFail()){
-            return rq.historyBack(ifMaxSizeRsData);
-        }
-        //모든 검증이 끝나면 등록 시도
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
-        if (createRsData.isFail()) {
-            return rq.historyBack(createRsData);
+    @PostMapping("/like")
+    public String like(@Valid LikeForm likeForm) {
+        RsData<LikeablePerson> rsData = likeablePersonService.like(rq.getMember(), likeForm.getUsername(), likeForm.getAttractiveTypeCode());
+
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData);
+
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", createRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -77,12 +67,16 @@ public class LikeablePersonController {
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
+
+            // 해당 인스타회원이 좋아하는 사람들 목록
+
             List<LikeablePerson> likeablePeople = instaMember.getFromLikeablePeople();
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
         return "usr/likeablePerson/list";
     }
+
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping ("/{id}")
     public String delete (@PathVariable("id") Long id){
@@ -98,5 +92,6 @@ public class LikeablePersonController {
 
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
+
 
 }
