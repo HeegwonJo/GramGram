@@ -96,6 +96,13 @@ public class LikeablePersonService {
         if (actorInstaMemberId != fromInstaMemberId)
             return RsData.of("F-2", "권한이 없습니다.");
 
+        //마지막 수정 이후 흐른 시간.
+        long likeablePersonDurationAfterModified = AppConfig.getLikeablePersonDurationAfterModified();
+
+        if(likeablePerson.getDurationAfterModified()<=likeablePersonDurationAfterModified){
+            return RsData.of("F-3", "마지막 수정이후 3시간이 경과하지 않았습니다.");
+        }
+
         return RsData.of("S-1", "삭제가능합니다.");
     }
 
@@ -207,6 +214,12 @@ public class LikeablePersonService {
 
         if (!Objects.equals(likeablePerson.getFromInstaMember().getId(), fromInstaMember.getId())) {
             return RsData.of("F-2", "해당 호감표시를 취소할 권한이 없습니다.");
+        }
+        //마지막 수정이후 흐른 시간
+        long likeablePersonDurationAfterModified = AppConfig.getLikeablePersonDurationAfterModified();
+
+        if(likeablePerson.getDurationAfterModified()<=likeablePersonDurationAfterModified){
+            return RsData.of("F-3", "마지막 수정이후 3시간이 지나지 않았습니다.");
         }
 
 
