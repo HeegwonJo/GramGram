@@ -43,6 +43,17 @@
                                 <div class="mt-2">
                                     <span class="badge badge-primary"
                                           th:text="${#temporals.format(likeablePerson.createDate, 'yy.MM.dd HH:mm')}"></span>
+                                    <span> 마지막 수정 : </span>
+
+                                    <span class="badge badge-info"
+                                          th:if="${likeablePerson.getDurationAfterModified() < 60}"
+                                          th:text="${likeablePerson.getDurationAfterModified()} + '초 전'"></span>
+                                    <span class="badge badge-info"
+                                          th:if="${likeablePerson.getDurationAfterModified() >= 60 and likeablePerson.getDurationAfterModified() < 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 60} + '분 전'"></span>
+                                    <span class="badge badge-info"
+                                          th:if="${likeablePerson.getDurationAfterModified() >= 3600}"
+                                          th:text="${likeablePerson.getDurationAfterModified() div 3600} + '시간 전'"></span>
                                 </div>
                             </div>
 
@@ -67,13 +78,13 @@
 
                             <div class="card-actions justify-center">
                                 <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline"
-                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-50 cursor-not-allowed' : ''">
+                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-30 cursor-not-allowed' : ''">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     &nbsp;
                                     호감사유 변경
                                 </a>
                                 <a class="btn btn-sm btn-outline"
-                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-50 cursor-not-allowed' : ''"
+                                   th:classappend="${!likeablePerson.isModifyUnlocked()} ? 'opacity-30 cursor-not-allowed' : ''"
                                    href="javascript:"
                                    onclick="if ( confirm('정말로 취소하시겠습니까?') ) $(this).next().submit();">
                                     <i class="fa-solid fa-user-slash"></i>
@@ -84,12 +95,22 @@
                                     <input type="hidden" name="_method" value="delete">
                                 </form>
                             </div>
-                            <div th:unless="${likeablePerson.isModifyUnlocked()}"
+                            <div
+                                 th:unless="${likeablePerson.isModifyUnlocked()}"
                                  class="text-center text-gray-500 text-sm mt-2">
                                 <span class="text-red-400">호감사유 변경</span>과 <span
-                                    class="text-red-400">호감취소</span>는 <span
-                                    class="badge badge-secondary"
-                                    th:text="${#temporals.format(likeablePerson.modifyDate.plusHours(3), 'yyyy-MM-dd HH:mm')}"></span> 이후에 가능합니다.
+                                    class="text-red-400">호감취소</span>는
+                                <span id="modyfyUnlockDate"
+                                      class="badge badge-secondary"
+                                      th:text="${#temporals.format(likeablePerson.modifyUnlockDate, 'yyyy-MM-dd HH:mm')}"></span>
+                                이후에 가능합니다.
+                            </div>
+                            <div th:unless="${likeablePerson.isModifyUnlocked()}"
+                                    class="text-center text-gray-500 text-sm mt-2">
+                                <span>남은 시간 : </span>
+                                <span class="badge badge-secondary "
+                                      th:text="${likeablePerson.getModifyUnlockDateRemainStrHuman()}">
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -113,21 +134,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var canModifyTime = document.getElementById('canModifyTime');
-            var modifyMsg = document.getElementById('modifyMsg');
-            var targetTime = new Date(canModifyTime.textContent).getTime();
-            var currentTime = new Date().getTime();
-            var duration = 3 * 60 * 60 * 1000; // 3시간을 밀리초로 변환
-
-            if (currentTime > targetTime + duration) {
-                canModifyTime.style.display = 'none';
-                modifyMsg.style.display = 'none';
-            }
-
-        });
-    </script>
 </main>
 </body>
 

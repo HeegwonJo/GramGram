@@ -11,19 +11,17 @@ public class AppConfig {
     @Getter
     private static long likeablePersonFromMax;
     @Getter
-    private static long likeablePersonDurationAfterModified;
+    private static long likeablePersonModifyCoolTime;
 
     @Value("${custom.likeablePerson.from.max}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax) {
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
     }
 
-    @Getter
-    private static long likeablePersonModifyCoolTime;
 
-    @Value("${custom.likeablePerson.DurationAfterModified}")
-    public void setLikeablePersonDurationAfterModified(long likeablePersonDurationAfterModified){
-        AppConfig.likeablePersonDurationAfterModified = likeablePersonDurationAfterModified;
+    @Value("${custom.likeablePerson.ModifyCoolTime}")
+    public void setLikeablePersonDurationAfterModified(long likeablePersonModifyCoolTime){
+        AppConfig.likeablePersonModifyCoolTime = likeablePersonModifyCoolTime;
     }
 
     public static LocalDateTime genLikeablePersonModifyUnlockDate() {

@@ -40,7 +40,9 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        return "2시간 16분";
+        Duration duration = Duration.between(LocalDateTime.now(), modifyUnlockDate);
+        long remainSec=Math.abs(duration.toSeconds());
+        return remainSec/3600 + " 시간 " + remainSec%3600/60 + " 분 ";
     }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {
@@ -80,6 +82,6 @@ public class LikeablePerson extends BaseEntity {
     }
 
     public boolean isModifyUnlocked(){
-        return getDurationAfterModified() >= AppConfig.getLikeablePersonDurationAfterModified();
+        return getDurationAfterModified() >= AppConfig.getLikeablePersonModifyCoolTime();
     }
 }

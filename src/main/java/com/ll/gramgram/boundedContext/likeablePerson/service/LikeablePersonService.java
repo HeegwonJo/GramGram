@@ -11,10 +11,13 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -96,12 +99,11 @@ public class LikeablePersonService {
         if (actorInstaMemberId != fromInstaMemberId)
             return RsData.of("F-2", "권한이 없습니다.");
 
-        //마지막 수정 이후 흐른 시간.
-        long likeablePersonDurationAfterModified = AppConfig.getLikeablePersonDurationAfterModified();
 
-        if(likeablePerson.getDurationAfterModified()<=likeablePersonDurationAfterModified){
+        if (likeablePerson.getModifyUnlockDate().isAfter(LocalDateTime.now())) {
             return RsData.of("F-3", "마지막 수정이후 3시간이 경과하지 않았습니다.");
         }
+
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
@@ -215,11 +217,9 @@ public class LikeablePersonService {
         if (!Objects.equals(likeablePerson.getFromInstaMember().getId(), fromInstaMember.getId())) {
             return RsData.of("F-2", "해당 호감표시를 취소할 권한이 없습니다.");
         }
-        //마지막 수정이후 흐른 시간
-        long likeablePersonDurationAfterModified = AppConfig.getLikeablePersonDurationAfterModified();
 
-        if(likeablePerson.getDurationAfterModified()<=likeablePersonDurationAfterModified){
-            return RsData.of("F-3", "마지막 수정이후 3시간이 지나지 않았습니다.");
+        if (likeablePerson.getModifyUnlockDate().isAfter(LocalDateTime.now())) {
+            return RsData.of("F-3", "마지막 수정이후 3시간이 경과하지 않았습니다.");
         }
 
 

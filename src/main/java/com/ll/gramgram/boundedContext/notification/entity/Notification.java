@@ -29,4 +29,20 @@ public class Notification extends BaseEntity {
     private int oldAttractiveTypeCode; // 해당사항 없으면 0
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
+
+    public String getAttractiveTypeDisplayName() {
+        return switch (newAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            default -> "능력";
+        };
+    }
+
+    public String getGenderDisplayName() {
+        return switch (newGender) {
+            case "M" -> "남자";
+            case "W" -> "여자";
+            default -> "남자";
+        };
+    }
 }
