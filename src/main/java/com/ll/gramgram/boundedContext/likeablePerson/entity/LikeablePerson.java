@@ -35,10 +35,10 @@ public class LikeablePerson extends BaseEntity {
 
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
-    private Duration durationAfterModified; // 수정, 삭제 부터 흐른 시간
+    private Duration durationAfterModified; // 수정, 추가부터 흐른 시간
 
 
-    // 초 단위에서 올림 해주세요.
+
     public String getModifyUnlockDateRemainStrHuman() {
         Duration duration = Duration.between(LocalDateTime.now(), modifyUnlockDate);
         long remainSec=Math.abs(duration.toSeconds());
