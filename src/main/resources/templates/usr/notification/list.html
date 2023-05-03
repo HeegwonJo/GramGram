@@ -35,8 +35,23 @@
                             <i class="fa-regular fa-message"></i>
                             내용
                         </div>
-                        <div>
-                            어떤 <span class="badge badge-primary" th:text="${notification.getGenderDisplayName()}"></span>가 당신을 <span class="badge badge-primary" th:text="${notification.getAttractiveTypeDisplayName()}"></span> 때문에 좋아합니다.
+                        <div th:switch="${notification.getTypeCode()}">
+                            <div th:case="Liked">
+                            어떤 <span class="badge badge-primary" th:text="${notification.getGenderDisplayName()}"></span>가 당신을
+                                <span class="badge badge-primary" th:text="${notification.getAttractiveTypeDisplayName()}"></span> 때문에 좋아합니다.
+                            </div>
+                            <div th:case="Modified">
+                                어떤 <span class="badge badge-primary" th:text="${notification.getGenderDisplayName()}"></span>가 당신을 좋아하는 이유를
+                                <span class="badge badge-primary" th:text="${notification.getOldAttractiveTypeDisplayName()}"></span> 에서
+                                <span class="badge badge-primary" th:text="${notification.getAttractiveTypeDisplayName()}"></span> 로 변경했습니다.
+                            </div>
+                            <div th:case="Canceled">
+                                어떤 <span class="badge badge-primary" th:text="${notification.getGenderDisplayName()}"></span>가 당신을 더 이상 좋아하지 않습니다.
+                            </div>
+                            <div th:case="GenderChanged">
+                                어떤 <span class="badge badge-primary" th:text="${notification.getOldGenderDisplayName()}"></span>가 성별을
+                                <span class="badge badge-primary" th:text="${notification.getGenderDisplayName()}"></span> 로 변경하였습니다..?
+                            </div>
                         </div>
                     </div>
                 </div>

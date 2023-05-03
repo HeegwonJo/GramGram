@@ -116,9 +116,6 @@ public class InstaMemberService {
 
         saveSnapshot(snapshot);
 
-        // 알림
-        notificationService.likeNotification(likeablePerson);
-
     }
 
     public void whenBeforeCancelLike(LikeablePerson likeablePerson) {
