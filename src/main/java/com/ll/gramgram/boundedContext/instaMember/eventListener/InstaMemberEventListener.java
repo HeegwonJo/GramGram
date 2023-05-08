@@ -5,6 +5,7 @@ import com.ll.gramgram.base.event.EventAfterLike;
 import com.ll.gramgram.base.event.EventAfterModifyAttractiveType;
 import com.ll.gramgram.base.event.EventBeforeCancelLike;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
+import com.ll.gramgram.boundedContext.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -14,25 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InstaMemberEventListener {
     private final InstaMemberService instaMemberService;
-
+    private final NotificationService notificationService;
     @EventListener
     @Transactional
     public void listen(EventAfterModifyAttractiveType event) {
         instaMemberService.whenAfterModifyAttractiveType(event.getLikeablePerson(), event.getOldAttractiveTypeCode());
+        notificationService.modifyNotification(event.getLikeablePerson(),event.getOldAttractiveTypeCode());
     }
 
     @EventListener
+    @Transactional
     public void listen(EventAfterLike event) {
         instaMemberService.whenAfterLike(event.getLikeablePerson());
+        notificationService.likeNotification(event.getLikeablePerson());
     }
 
     @EventListener
+    @Transactional
     public void listen(EventBeforeCancelLike event) {
         instaMemberService.whenBeforeCancelLike(event.getLikeablePerson());
+        notificationService.cancelNotification(event.getLikeablePerson());
     }
 
     @EventListener
+    @Transactional
     public void listen(EventAfterFromInstaMemberChangeGender event) {
         instaMemberService.whenAfterFromInstaMemberChangeGender(event.getInstaMember(), event.getOldGender());
+        notificationService.genderChangeNotification(event.getInstaMember(),event.getOldGender());
     }
 }

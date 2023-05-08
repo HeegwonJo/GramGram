@@ -122,9 +122,8 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    @ResponseBody
     public String showToList(Model model) {
         //TODO : showToList 구현해야 함
-        return "usr/likeablePerson/toList 구현해야 함";
+        return "usr/likeablePerson/toList";
     }
 }

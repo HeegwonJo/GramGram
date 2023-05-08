@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -29,4 +30,39 @@ public class Notification extends BaseEntity {
     private int oldAttractiveTypeCode; // 해당사항 없으면 0
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
+
+    public String getAttractiveTypeDisplayName() {
+        return switch (newAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            default -> "능력";
+        };
+    }
+    public String getOldAttractiveTypeDisplayName() {
+        return switch (oldAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            default -> "능력";
+        };
+    }
+
+    public String getGenderDisplayName() {
+        return switch (newGender) {
+            case "M" -> "남자";
+            case "W" -> "여자";
+            default -> "남자";
+        };
+    }
+    public String getOldGenderDisplayName() {
+        return switch (oldGender) {
+            case "M" -> "남자";
+            case "W" -> "여자";
+            default -> "남자";
+        };
+    }
+
+
+    public void updateReadDate(){
+        this.readDate=LocalDateTime.now();
+    }
 }

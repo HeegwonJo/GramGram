@@ -33,7 +33,7 @@ public class NotProd {
                 Member memberUser5ByKakao = memberService.whenSocialLogin("KAKAO", " KAKAO__2733471765").getData();
                 Member memberUser6ByGoogle = memberService.whenSocialLogin("GOOGLE", " GOOGLE__107424432860839741560").getData();
                 Member memberUser7ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__aCCQ2JhCs_WEgyRxR3lCWU3VDQOKDYg9i12r6wtXUQs").getData();
-
+                Member memberUser8ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__6149985535097875").getData();
                 instaMemberService.connect(memberUser2, "insta_user2", "M");
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
                 instaMemberService.connect(memberUser4, "insta_user4", "M");
@@ -41,6 +41,7 @@ public class NotProd {
 
                 likeablePersonService.like(memberUser3, "insta_user4", 1);
                 likeablePersonService.like(memberUser3, "insta_user100", 2);
+                likeablePersonService.like(memberUser3, "hg_liquid", 1);
             }
         };
     }
