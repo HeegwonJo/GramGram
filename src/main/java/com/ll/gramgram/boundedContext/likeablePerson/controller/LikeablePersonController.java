@@ -69,6 +69,8 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
+
+
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public String cancel(@PathVariable Long id) {
@@ -122,7 +124,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model) {
+    public String showToList(Model model, @RequestParam(required = false) String gender) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
@@ -134,4 +136,5 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/toList";
     }
+
 }
