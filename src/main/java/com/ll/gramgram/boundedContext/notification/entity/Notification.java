@@ -2,13 +2,13 @@ package com.ll.gramgram.boundedContext.notification.entity;
 
 import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.standard.util.Ut;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -31,13 +31,23 @@ public class Notification extends BaseEntity {
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
 
-    public String getAttractiveTypeDisplayName() {
-        return switch (newAttractiveTypeCode) {
-            case 1 -> "외모";
-            case 2 -> "성격";
-            default -> "능력";
-        };
+    public boolean isRead() {
+        return readDate != null;
     }
+
+    public void markAsRead() {
+        readDate = LocalDateTime.now();
+    }
+
+    public String getCreateDateAfterStrHuman() {
+        return Ut.time.diffFormat1Human(LocalDateTime.now(), getCreateDate());
+    }
+
+    public boolean isHot() {
+        // 만들어진지 60분이 안되었다면 hot 으로 설정
+        return getCreateDate().isAfter(LocalDateTime.now().minusMinutes(60));
+    }
+
     public String getOldAttractiveTypeDisplayName() {
         return switch (oldAttractiveTypeCode) {
             case 1 -> "외모";
@@ -46,23 +56,18 @@ public class Notification extends BaseEntity {
         };
     }
 
-    public String getGenderDisplayName() {
+    public String getNewAttractiveTypeDisplayName() {
+        return switch (newAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            default -> "능력";
+        };
+    }
+
+    public String getNewGenderDisplayName() {
         return switch (newGender) {
-            case "M" -> "남자";
-            case "W" -> "여자";
-            default -> "남자";
+            case "W" -> "여성";
+            default -> "남성";
         };
-    }
-    public String getOldGenderDisplayName() {
-        return switch (oldGender) {
-            case "M" -> "남자";
-            case "W" -> "여자";
-            default -> "남자";
-        };
-    }
-
-
-    public void updateReadDate(){
-        this.readDate=LocalDateTime.now();
     }
 }

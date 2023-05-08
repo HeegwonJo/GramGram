@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,14 +34,13 @@ public class LikeablePerson extends BaseEntity {
 
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
 
-    private Duration durationAfterModified; // 수정, 추가부터 흐른 시간
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
+    }
 
-
-
+    // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        Duration duration = Duration.between(LocalDateTime.now(), modifyUnlockDate);
-        long remainSec=Math.abs(duration.toSeconds());
-        return remainSec/3600 + " 시간 " + remainSec%3600/60 + " 분 ";
+        return Ut.time.diffFormat1Human(LocalDateTime.now(), modifyUnlockDate);
     }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {
@@ -74,14 +72,5 @@ public class LikeablePerson extends BaseEntity {
 
     public String getJdenticon() {
         return Ut.hash.sha256(fromInstaMember.getId() + "_likes_" + toInstaMember.getId());
-    }
-
-    public long getDurationAfterModified(){
-        this.durationAfterModified=Duration.between(this.getModifyDate(), LocalDateTime.now());
-        return durationAfterModified.toSeconds();
-    }
-
-    public boolean isModifyUnlocked(){
-        return getDurationAfterModified() >= AppConfig.getLikeablePersonModifyCoolTime();
     }
 }
