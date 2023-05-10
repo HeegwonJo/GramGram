@@ -1,5 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
+import com.ll.gramgram.base.baseEntity.BaseEntity;
+import com.ll.gramgram.base.baseEntity.QBaseEntity;
 import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -112,7 +115,7 @@ public class LikeablePersonController {
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
             List<LikeablePerson> likeablePeople;
-            if (gender == null ||gender.isBlank()) { // gender가 선택되지 않은 경우, 빈칸인 경우
+            if (gender == null || gender.isBlank()) { // gender가 선택되지 않은 경우, 빈칸인 경우
                 likeablePeople = instaMember.getToLikeablePeople();
             } else { // gender가 선택된 경우
                 likeablePeople = instaMember.getToLikeablePeople().stream()
@@ -121,8 +124,47 @@ public class LikeablePersonController {
             }
             if (attractiveTypeCode != null) {
                 likeablePeople = likeablePeople.stream()
-                        .filter(likeablePerson -> likeablePerson.getAttractiveTypeCode()==(attractiveTypeCode))
+                        .filter(likeablePerson -> likeablePerson.getAttractiveTypeCode() == (attractiveTypeCode))
                         .collect(Collectors.toList());
+            }
+
+            if (sortCode != null) {
+                switch (sortCode) {
+                    case 2: //날짜순
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparing(BaseEntity::getCreateDate))
+                                .collect(Collectors.toList());
+                        break;
+                    case 3:// 인기순
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparing(a -> a.getFromInstaMember().getToLikeablePeople().size(), Comparator.reverseOrder()))
+                                .collect(Collectors.toList());
+                        break;
+
+                    case 4:// 인기 역순
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparing(a -> a.getFromInstaMember().getToLikeablePeople().size()))
+                                .collect(Collectors.toList());
+                        break;
+                    case 5: // 성별순 여성 먼저.
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparing(a -> a.getFromInstaMember().getGender(),Comparator.reverseOrder()))
+                                .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                                .collect(Collectors.toList());
+                        break;
+                    case 6: //호감 사유 순
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparingInt(LikeablePerson::getAttractiveTypeCode))
+                                .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                                .collect(Collectors.toList());
+                        break;
+                    case 1: // 최신순 (기본값)
+                    default:
+                        likeablePeople = likeablePeople.stream()
+                                .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                                .collect(Collectors.toList());
+
+                }
             }
 
             model.addAttribute("likeablePeople", likeablePeople);
