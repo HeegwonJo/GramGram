@@ -53,12 +53,11 @@ public class NotProd {
                 Member memberUser8ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__%s".formatted(naverDevUserOAuthId)).getData();
                 Member memberUser9ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__%s".formatted(facebookDevUserOAuthId)).getData();
 
-                instaMemberService.connect(memberUser1, "insta_user1", "M");
+
                 instaMemberService.connect(memberUser2, "insta_user2", "M");
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
                 instaMemberService.connect(memberUser4, "insta_user4", "M");
                 instaMemberService.connect(memberUser5, "insta_user5", "W");
-                instaMemberService.connect(memberUser6, "insta_user6", "W");
 
                 // 원활한 테스트와 개발을 위해서 자동으로 만들어지는 호감이 삭제, 수정이 가능하도록 쿨타임해제
                 LikeablePerson likeablePersonToInstaUser4 = likeablePersonService.like(memberUser3, "insta_user4", 1).getData();
@@ -67,13 +66,6 @@ public class NotProd {
                 Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
 
                 LikeablePerson likeablePersonToInstaUserAbcd = likeablePersonService.like(memberUser3, "insta_user_abcd", 2).getData();
-                LikeablePerson likeablePersonTohg = likeablePersonService.like(memberUser2, "hg_liquid", 1).getData();
-                Ut.reflection.setFieldValue(likeablePersonTohg, "createDate", LocalDateTime.now().minusDays(1));
-                LikeablePerson likeablePersonTohg2 = likeablePersonService.like(memberUser3, "hg_liquid", 2).getData();
-                Ut.reflection.setFieldValue(likeablePersonTohg2, "createDate", LocalDateTime.now().minusDays(2));
-                LikeablePerson likeablePersonTohg3 = likeablePersonService.like(memberUser4, "hg_liquid", 3).getData();
-                Ut.reflection.setFieldValue(likeablePersonTohg3, "createDate", LocalDateTime.now().minusHours(1));
-                LikeablePerson likeablePersonTohg4 = likeablePersonService.like(memberUser5, "hg_liquid", 3).getData();
             }
         };
     }
