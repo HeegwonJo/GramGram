@@ -122,7 +122,7 @@ public class LikeablePersonController {
                         .filter(likeablePerson -> likeablePerson.getFromInstaMember().getGender().equals(gender))
                         .collect(Collectors.toList());
             }
-            if (attractiveTypeCode != null) {
+            if (attractiveTypeCode != null) { //호감 사유가 선택된 경우
                 likeablePeople = likeablePeople.stream()
                         .filter(likeablePerson -> likeablePerson.getAttractiveTypeCode() == (attractiveTypeCode))
                         .collect(Collectors.toList());
