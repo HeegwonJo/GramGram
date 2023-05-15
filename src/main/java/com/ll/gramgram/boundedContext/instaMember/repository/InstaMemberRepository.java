@@ -9,4 +9,5 @@ public interface InstaMemberRepository extends JpaRepository<InstaMember, Long> 
     Optional<InstaMember> findByUsername(String username);
 
     Optional<InstaMember> findByOauthId(String oauthId);
+
 }

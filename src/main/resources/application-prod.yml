@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://172.17.0.1:3306/gram__prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: heegwon
-    password: Rnjs2327~~
+    username: root
+    password: rnjs2327
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,4 +20,4 @@ logging:
     org.hibernate.orm.jdbc.extract: INFO
 custom:
   site:
-    baseUrl: https://www.codelike.app
+    baseUrl: https://www.joyfulgwon.site
